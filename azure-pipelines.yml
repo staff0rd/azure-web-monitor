@@ -1,0 +1,30 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- master
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- task: DotNetCoreInstaller@0
+  inputs:
+    version: '2.2.202'
+- script: dotnet restore
+- task: DotNetCoreCLI@2
+  inputs:
+    command: build
+    projects: 'src/AzureWebMonitor.Test.csproj'
+    arguments: '--configuration $(buildConfiguration)'
+- task: DotNetCoreCLI@2
+  inputs:
+    command: test
+    projects: 'src/AzureWebMonitor.Test.csproj'
+    arguments: '--configuration $(buildConfiguration)'
+- task: PublishTestResults@2
+  inputs:
+    testRunner: VSTest
+    testResultsFiles: '**/*.trx'
