@@ -5,8 +5,9 @@
 
 trigger:
 - master
+
 schedules:
-- cron: '* * * * *'
+- cron: '0 * * * *'
   displayName: Hourly build
   branches:
     include:
