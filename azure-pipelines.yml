@@ -13,7 +13,10 @@ steps:
 - task: DotNetCoreInstaller@0
   inputs:
     version: '2.2.401'
-- script: dotnet restore
+- task: DotNetCoreCLI@2
+  inputs:
+    command: restore
+    projects: 'src/AzureWebMonitor.Test.csproj'
 - task: DotNetCoreCLI@2
   inputs:
     command: build
