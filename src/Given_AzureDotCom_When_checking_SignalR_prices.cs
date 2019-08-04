@@ -13,13 +13,13 @@ namespace AzureWebMonitor.Test
     [TestClass]
     public class Given_AzureDotCom_When_checking_SignalR_prices
     {
-        static RemoteWebDriver _driver;
+        static IWebDriver _driver;
         static SignalRPricing _signalRPricing;
 
         [ClassInitialize]
         public static void Init(TestContext context)
         {
-            _driver = new ChromeDriver(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), new ChromeOptions { });
+            _driver = WebDriverHelper.GetDriver();
             var fiveSecondWait = new OpenQA.Selenium.Support.UI.WebDriverWait(_driver, TimeSpan.FromSeconds(5));
             
             _driver.Navigate().GoToUrl(@"http://azure.com");
