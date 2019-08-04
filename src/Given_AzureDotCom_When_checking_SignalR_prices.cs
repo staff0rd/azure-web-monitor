@@ -1,9 +1,8 @@
+using AzureWebMonitor.Test.PageModel.AzureDotCom;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
-using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Remote;
-using SeleniumExtras.WaitHelpers;
 using Shouldly;
 using System;
 using System.IO;
@@ -15,68 +14,46 @@ namespace AzureWebMonitor.Test
     public class Given_AzureDotCom_When_checking_SignalR_prices
     {
         static RemoteWebDriver _driver;
+        static SignalRPricing _signalRPricing;
 
         [ClassInitialize]
         public static void Init(TestContext context)
         {
             _driver = new ChromeDriver(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), new ChromeOptions { });
+            var fiveSecondWait = new OpenQA.Selenium.Support.UI.WebDriverWait(_driver, TimeSpan.FromSeconds(5));
+            
             _driver.Navigate().GoToUrl(@"http://azure.com");
 
-            var wait = new OpenQA.Selenium.Support.UI.WebDriverWait(_driver, TimeSpan.FromSeconds(10));
-            var clickableElement = wait.Until(ExpectedConditions.ElementToBeClickable(By.LinkText("Pricing")));
-            clickableElement.Click();
+            var home = new Home(_driver, fiveSecondWait);
+            
+            var pricing = home.ClickPricing();
 
-            clickableElement = wait.Until(ExpectedConditions.ElementToBeClickable(By.LinkText("Pricing by product")));
-            clickableElement.Click();
+            pricing.Search("signalr");
 
-            var searchBox = _driver.FindElement(By.Id("searchPicker-input"));
-            Actions actions = new Actions(_driver);
-            actions.MoveToElement(searchBox);
-            actions.Perform();
+            _signalRPricing = pricing.ClickSearchResult("Azure SignalR Service");
 
-            searchBox.SendKeys("signalr");
+            _signalRPricing.SelectRegion("Australia East");
 
-            clickableElement = wait.Until(ExpectedConditions.ElementToBeClickable(By.PartialLinkText("Azure SignalR Service")));
-            clickableElement.Click();
+            _signalRPricing.SelectCurrency("Australian Dollar ($)");
+        }
 
-            OpenQA.Selenium.Support.UI.SelectElement select = new OpenQA.Selenium.Support.UI.SelectElement(_driver.FindElement(By.Id("region-selector")));
-            select.SelectByText("Australia East");
 
-            select = new OpenQA.Selenium.Support.UI.SelectElement(_driver.FindElementByClassName("currency-selector"));
-            select.SelectByText("Australian Dollar ($)");
+        [TestMethod]
+        public void Then_price_should_be_expensive()
+        {
+            _signalRPricing.Prices["Price / Unit / Day"].ShouldBe("$2.2106");
+        }
+
+        [TestMethod]
+        public void Then_max_unit_count_should_be_unchanged()
+        {
+            _signalRPricing.Prices["Max Units"].ShouldBe("100");
         }
 
         [ClassCleanup]
         public static void Cleanup()
         {
             _driver.Dispose();
-        }
-
-        [TestMethod]
-        public void Then_price_should_be_expensive()
-        {
-            var price = GetPriceTableValue("Price / Unit / Day");
-            price.ShouldBe("$2.2106");
-        }
-
-        [TestMethod]
-        public void Then_max_unit_count_should_be_unchanged() {
-            var maxUnitCount = GetPriceTableValue("Max Units");
-            maxUnitCount.ShouldBe("100");
-        }
-
-        private static string GetPriceTableValue(string label)
-        {
-            var rows = _driver.FindElementsByTagName("tr");
-            foreach (var row in rows)
-            {
-                var cells = row.FindElements(By.TagName("td"));
-                if (cells.Count > 0 && cells[0].Text == label)
-                {
-                    return cells[2].Text;
-                }
-            }
-            return "";
         }
     }
 }
