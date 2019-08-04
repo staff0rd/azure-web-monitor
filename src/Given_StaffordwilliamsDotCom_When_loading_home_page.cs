@@ -9,7 +9,6 @@ namespace AzureWebMonitor.Test
     public class Given_StaffordwilliamsDotCom_When_loading_home_page
     {
         static IWebDriver _driver;
-        static SignalRPricing _signalRPricing;
 
         [ClassInitialize]
         public static void Init(TestContext context)
