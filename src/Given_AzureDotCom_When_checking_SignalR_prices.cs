@@ -1,12 +1,8 @@
 using AzureWebMonitor.Test.PageModel.AzureDotCom;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium;
-using OpenQA.Selenium.Chrome;
-using OpenQA.Selenium.Remote;
 using Shouldly;
 using System;
-using System.IO;
-using System.Reflection;
 
 namespace AzureWebMonitor.Test
 {
