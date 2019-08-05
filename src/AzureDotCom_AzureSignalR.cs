@@ -7,7 +7,7 @@ using System;
 namespace AzureWebMonitor.Test
 {
     [TestClass]
-    public class Given_AzureDotCom_When_checking_SignalR_prices
+    public class AzureDotCom_AzureSignalR
     {
         static IWebDriver _driver;
         static SignalRPricing _signalRPricing;
@@ -33,15 +33,14 @@ namespace AzureWebMonitor.Test
             _signalRPricing.SelectCurrency("Australian Dollar ($)");
         }
 
-
         [TestMethod]
-        public void Then_price_should_be_expensive()
+        public void AzureSignalR_remains_expensive()
         {
             _signalRPricing.Prices["Price / Unit / Day"].ShouldBe("$2.2106");
         }
 
         [TestMethod]
-        public void Then_max_unit_count_should_be_unchanged()
+        public void AzureSignalR_Max_unit_count_remains_unchanged()
         {
             _signalRPricing.Prices["Max Units"].ShouldBe("100");
         }

@@ -6,7 +6,7 @@ using Shouldly;
 namespace AzureWebMonitor.Test
 {
     [TestClass]
-    public class Given_StaffordwilliamsDotCom_When_loading_home_page
+    public class StaffordWilliamsDotCom_Home
     {
         static IWebDriver _driver;
 
@@ -19,7 +19,7 @@ namespace AzureWebMonitor.Test
         }
 
         [TestMethod]
-        public void Then_loads()
+        public void Blog_HomeLoads()
         {
             var homeLink = _driver.FindElement(By.LinkText("stafford williams"));
             homeLink.ShouldNotBeNull();
