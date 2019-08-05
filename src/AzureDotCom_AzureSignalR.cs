@@ -10,10 +10,9 @@ namespace AzureWebMonitor.Test
     public class AzureDotCom_AzureSignalR
     {
         static IWebDriver _driver;
-        static SignalRPricing _signalRPricing;
 
-        [ClassInitialize]
-        public static void Init(TestContext context)
+        [TestMethod]
+        public void Azure_SignalR_Pricing()
         {
             _driver = WebDriverHelper.GetDriver();
             var fiveSecondWait = new OpenQA.Selenium.Support.UI.WebDriverWait(_driver, TimeSpan.FromSeconds(5));
@@ -26,23 +25,15 @@ namespace AzureWebMonitor.Test
 
             pricing.Search("signalr");
 
-            _signalRPricing = pricing.ClickSearchResult("Azure SignalR Service");
+            var signalRPricing = pricing.ClickSearchResult("Azure SignalR Service");
 
-            _signalRPricing.SelectRegion("Australia East");
+            signalRPricing.SelectRegion("Australia East");
 
-            _signalRPricing.SelectCurrency("Australian Dollar ($)");
-        }
+            signalRPricing.SelectCurrency("Australian Dollar ($)");
 
-        [TestMethod]
-        public void AzureSignalR_remains_expensive()
-        {
-            _signalRPricing.Prices["Price / Unit / Day"].ShouldBe("$2.2106");
-        }
-
-        [TestMethod]
-        public void AzureSignalR_Max_unit_count_remains_unchanged()
-        {
-            _signalRPricing.Prices["Max Units"].ShouldBe("100");
+            signalRPricing.Prices["Price / Unit / Day"].ShouldBe("$2.2106");
+        
+            signalRPricing.Prices["Max Units"].ShouldBe("100");
         }
 
         [ClassCleanup]

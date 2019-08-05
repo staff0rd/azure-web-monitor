@@ -10,17 +10,11 @@ namespace AzureWebMonitor.Test
     {
         static IWebDriver _driver;
 
-        [ClassInitialize]
-        public static void Init(TestContext context)
-        {
-            _driver = WebDriverHelper.GetDriver();
-        
-            _driver.Navigate().GoToUrl(@"https://staffordwilliams.com");
-        }
-
         [TestMethod]
         public void Blog_HomeLoads()
         {
+            _driver = WebDriverHelper.GetDriver();
+            _driver.Navigate().GoToUrl(@"https://staffordwilliams.com");
             var homeLink = _driver.FindElement(By.LinkText("stafford williams"));
             homeLink.ShouldNotBeNull();
         }
