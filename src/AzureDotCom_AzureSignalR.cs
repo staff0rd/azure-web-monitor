@@ -1,4 +1,5 @@
 using AzureWebMonitor.Test.PageModel.AzureDotCom;
+using Microsoft.ApplicationInsights;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium;
 using Shouldly;
@@ -10,36 +11,48 @@ namespace AzureWebMonitor.Test
     public class AzureDotCom_AzureSignalR
     {
         static IWebDriver _driver;
+        static TelemetryClient _appInsights;
 
         [TestMethod]
         public void Azure_SignalR_Pricing()
         {
-            _driver = WebDriverHelper.GetDriver();
-            var fiveSecondWait = new OpenQA.Selenium.Support.UI.WebDriverWait(_driver, TimeSpan.FromSeconds(5));
+            try
+            {
+                _driver = WebDriverHelper.GetDriver();
+                _appInsights = new TelemetryClient();
+                
+                var fiveSecondWait = new OpenQA.Selenium.Support.UI.WebDriverWait(_driver, TimeSpan.FromSeconds(5));
+                
+                _driver.Navigate().GoToUrl(@"http://azure.com");
+
+                var home = new Home(_driver, fiveSecondWait);
+                
+                var pricing = home.ClickPricing();
+
+                pricing.Search("signalr");
+
+                var signalRPricing = pricing.ClickSearchResult("Azure SignalR Service");
+
+                signalRPricing.SelectRegion("Australia East");
+
+                signalRPricing.SelectCurrency("Australian Dollar ($)");
+
+                signalRPricing.Prices["Price / Unit / Day"].ShouldBe("$2.2106");
             
-            _driver.Navigate().GoToUrl(@"http://azure.com");
+                signalRPricing.Prices["Max Units"].ShouldBe("100");
+            }
+            catch (Exception e)
+            {
 
-            var home = new Home(_driver, fiveSecondWait);
-            
-            var pricing = home.ClickPricing();
+            }
 
-            pricing.Search("signalr");
-
-            var signalRPricing = pricing.ClickSearchResult("Azure SignalR Service");
-
-            signalRPricing.SelectRegion("Australia East");
-
-            signalRPricing.SelectCurrency("Australian Dollar ($)");
-
-            signalRPricing.Prices["Price / Unit / Day"].ShouldBe("$2.2106");
-        
-            signalRPricing.Prices["Max Units"].ShouldBe("100");
         }
 
         [ClassCleanup]
         public static void Cleanup()
         {
             _driver.Dispose();
+            _appInsights.
         }
     }
 }
