@@ -1,6 +1,3 @@
-using System.IO;
-using System.Reflection;
-using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using System.Linq;
 
@@ -18,7 +15,7 @@ namespace AzureWebMonitor.Test
             var rules = string.Join(',', _blockUrls.Select(r => $"MAP {r} 127.0.0.1"));
             options.AddArgument($"--host-resolver-rules={rules}");
             options.AddArgument("--headless");
-            return new ChromeDriver(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), options);
+            return new ChromeDriver(ConfigurationHelper.WorkingDirectory, options);
         }
     }
 }

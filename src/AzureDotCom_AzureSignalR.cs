@@ -1,5 +1,6 @@
 using AzureWebMonitor.Test.PageModel.AzureDotCom;
 using Microsoft.ApplicationInsights;
+using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium;
 using Shouldly;
@@ -11,7 +12,9 @@ namespace AzureWebMonitor.Test
     public class AzureDotCom_AzureSignalR
     {
         static IWebDriver _driver;
-        static TelemetryClient _appInsights;
+        static ApplicationInsights _appInsights;
+
+        static string _url = "http://azure.com";
 
         [TestMethod]
         public void Azure_SignalR_Pricing()
@@ -19,19 +22,23 @@ namespace AzureWebMonitor.Test
             try
             {
                 _driver = WebDriverHelper.GetDriver();
-                _appInsights = new TelemetryClient();
+                _appInsights = new ApplicationInsights(ConfigurationHelper.GetApplicationConfiguration().InstrumentationKey, _url);
                 
                 var fiveSecondWait = new OpenQA.Selenium.Support.UI.WebDriverWait(_driver, TimeSpan.FromSeconds(5));
                 
-                _driver.Navigate().GoToUrl(@"http://azure.com");
+                _driver.Navigate().GoToUrl(_url);
 
                 var home = new Home(_driver, fiveSecondWait);
+                
+                _appInsights.Success("Home");
                 
                 var pricing = home.ClickPricing();
 
                 pricing.Search("signalr");
 
                 var signalRPricing = pricing.ClickSearchResult("Azure SignalR Service");
+
+                _appInsights.Success("Pricing");
 
                 signalRPricing.SelectRegion("Australia East");
 
@@ -43,7 +50,7 @@ namespace AzureWebMonitor.Test
             }
             catch (Exception e)
             {
-
+                _appInsights.Error(e);
             }
 
         }
@@ -52,7 +59,6 @@ namespace AzureWebMonitor.Test
         public static void Cleanup()
         {
             _driver.Dispose();
-            _appInsights.
         }
     }
 }

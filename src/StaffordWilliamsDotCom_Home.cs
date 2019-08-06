@@ -1,3 +1,4 @@
+using System;
 using AzureWebMonitor.Test.PageModel.AzureDotCom;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium;
@@ -9,14 +10,26 @@ namespace AzureWebMonitor.Test
     public class StaffordWilliamsDotCom_Home
     {
         static IWebDriver _driver;
+        static ApplicationInsights _appInsights;
+        
 
         [TestMethod]
         public void Blog_HomeLoads()
         {
-            _driver = WebDriverHelper.GetDriver();
-            _driver.Navigate().GoToUrl(@"https://staffordwilliams.com");
-            var homeLink = _driver.FindElement(By.LinkText("stafford williams"));
-            homeLink.ShouldNotBeNull();
+            var url = "https://staffordwilliams.com";
+            _appInsights = new ApplicationInsights(ConfigurationHelper.GetApplicationConfiguration().InstrumentationKey, url);
+            try
+            {
+                _driver = WebDriverHelper.GetDriver();
+                _driver.Navigate().GoToUrl(url);
+                var homeLink = _driver.FindElement(By.LinkText("stafford williams"));
+                homeLink.ShouldNotBeNull();
+                _appInsights.Success("Home");
+            }
+            catch (Exception e)
+            {
+                _appInsights.Error(e);
+            } 
         }
 
         [ClassCleanup]
