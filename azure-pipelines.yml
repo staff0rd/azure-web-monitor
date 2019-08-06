@@ -25,16 +25,16 @@ steps:
 - task: DotNetCoreCLI@2
   inputs:
     command: restore
-    projects: 'src/AzureWebMonitor.Test.csproj'
+    projects: 'src/AzureWebMonitor.Test/AzureWebMonitor.Test.csproj'
 - task: DotNetCoreCLI@2
   inputs:
     command: build
-    projects: 'src/AzureWebMonitor.Test.csproj'
+    projects: 'src/AzureWebMonitor.Test/AzureWebMonitor.Test.csproj'
     arguments: '--configuration $(buildConfiguration)'
 - task: DotNetCoreCLI@2
   inputs:
     command: test
-    projects: 'src/AzureWebMonitor.Test.csproj'
+    projects: 'src/AzureWebMonitor.Test/AzureWebMonitor.Test.csproj'
     arguments: '--configuration $(buildConfiguration)'
 - task: PublishTestResults@2
   inputs:
