@@ -40,3 +40,4 @@ steps:
   inputs:
     testRunner: VSTest
     testResultsFiles: '**/*.trx'
+  condition: succeededOrFailed()
