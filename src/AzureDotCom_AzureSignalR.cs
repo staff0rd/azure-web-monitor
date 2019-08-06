@@ -51,6 +51,7 @@ namespace AzureWebMonitor.Test
             catch (Exception e)
             {
                 _appInsights.Error(e);
+                throw;
             }
 
         }
@@ -59,6 +60,7 @@ namespace AzureWebMonitor.Test
         public static void Cleanup()
         {
             _driver.Dispose();
+            _appInsights.Dispose();
         }
     }
 }

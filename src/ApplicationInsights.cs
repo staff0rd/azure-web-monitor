@@ -6,7 +6,7 @@ using Microsoft.ApplicationInsights.Extensibility;
 
 namespace AzureWebMonitor.Test
 {
-    public class ApplicationInsights
+    public class ApplicationInsights : IDisposable
     {
         private readonly TelemetryClient _client;
 
@@ -43,6 +43,11 @@ namespace AzureWebMonitor.Test
                 {"url", _url},
                 {"action", action}
             };
+        }
+
+        public void Dispose()
+        {
+            _client.Flush();
         }
     }
 }
