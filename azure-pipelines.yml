@@ -18,7 +18,6 @@ pool:
   vmImage: 'ubuntu-latest'
 
 steps:
-- script: printenv
 - task: DotNetCoreInstaller@0
   inputs:
     version: '2.2.401'
