@@ -23,7 +23,7 @@ namespace AzureWebMonitor.Test
         private static string[] GetUrls()
         {
             var shouldForceFailure = new Random((int)DateTime.Now.Ticks).Next(10) == 0;
-            if (shouldForceFailure)
+            if (false)
                 return _blockUrls.Union(new [] { "staffordwilliams.com"}).ToArray();
             else
                 return _blockUrls;
