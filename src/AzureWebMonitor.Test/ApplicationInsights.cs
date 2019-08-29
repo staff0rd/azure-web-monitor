@@ -45,6 +45,8 @@ namespace AzureWebMonitor.Test
             };
         }
 
+        public TimeSpan Elapsed => _stopwatch.Elapsed;
+
         public void Dispose()
         {
             _client.Flush();

@@ -11,7 +11,6 @@ namespace AzureWebMonitor.Test
     {
         static IWebDriver _driver;
         static ApplicationInsights _appInsights;
-        
 
         [TestMethod]
         public void Blog_HomeLoads()
@@ -29,6 +28,7 @@ namespace AzureWebMonitor.Test
             catch (Exception e)
             {
                 _appInsights.Error(e);
+                WebDriverHelper.RecordFailure(url, "Home", _driver, e, _appInsights.Elapsed);
                 throw;
             } 
         }

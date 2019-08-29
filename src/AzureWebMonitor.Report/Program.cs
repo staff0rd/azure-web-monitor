@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -33,6 +34,12 @@ namespace AzureWebMonitor.Report
         {
             var query = $"exceptions | where timestamp > ago({ago}) | make-series count() default=0 on timestamp in range(ago({ago}), now(), 3h) by type";
             var result = GetTelemetry(query);
+
+            JArray rows = JsonConvert.DeserializeObject<dynamic>(result).tables[0].rows;
+
+            if (rows.Count == 0)
+                return;
+
             var row = JsonConvert.DeserializeObject<dynamic>(result).tables[0].rows[0];
 
             string row1 = row[1];
