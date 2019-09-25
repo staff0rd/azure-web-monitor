@@ -15,7 +15,7 @@ namespace AzureWebMonitor.Test
             _failures = failures.ToArray();   
         }
 
-        public void Process()
+        public void Process(string outputPath)
         {
             if (_failures.Any())
             {
@@ -28,7 +28,17 @@ namespace AzureWebMonitor.Test
                     content += $"<img src='{fail.ScreenshotPath}' />";
                     content += "</div>";
                 }
+                File.WriteAllText(outputPath, string.Format(template, content));
+
+                Email(outputPath);
             }
+        }
+
+        private void Email(string outputPath)
+        {
+            // create mail message
+            // insert html
+            // attach screenshots
         }
     }
 }
